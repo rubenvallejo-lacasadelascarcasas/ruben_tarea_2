@@ -26,12 +26,6 @@
  */
 
 
-use Doctrine\Common\Collections\Expr\Value;
-use GeoIp2\Model\City;
-use GeoIp2\Record\City as RecordCity;
-use PrestaShop\PrestaShop\Core\Import\Importer;
-use GeoIP2\WebService\Client;
-use GeoIp2\Database\Reader;
 
 
 
@@ -243,11 +237,10 @@ class Tarea2 extends Module
     }
     public function hookDisplayNav2()
     {
-       
+
 
         $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
 
-       
 
         $record = $reader->city('87.218.18.237');
 
@@ -257,11 +250,7 @@ class Tarea2 extends Module
         $url = "http://api.openweathermap.org/data/2.5/weather?APPID=d4b3044a5fa5b21323639b5aab155c62&q=" . $ciudad . ",es&units=metric&lang=es";
 
 
-
-
-
         $tiempo = json_decode(file_get_contents($url), true);
-
 
 
         $temperatura = $tiempo['main']['temp'];
@@ -269,15 +258,13 @@ class Tarea2 extends Module
         $velocidad = $tiempo['wind']['speed'];
 
 
+        $this->smarty->assign(array(
+            'ciudad' => $ciudad,
+            'temperatura' => $temperatura, 
+            'nubosidad' => $nubosidad,
+            'velocidad' => $velocidad
+        ));
 
-
-        $record2 = $reader->city('195.135.249.53');
-
-
-        $GLOBALS['smarty']->assign("ciudad", $ciudad);
-        $GLOBALS['smarty']->assign("temperatura", $temperatura);
-        $GLOBALS['smarty']->assign("nubosidad", $nubosidad);
-        $GLOBALS['smarty']->assign("velocidad", $velocidad);
         return $this->display(__FILE__, 'views/templates/hook/tarea2.tpl');
     }
 }
